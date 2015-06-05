@@ -1,0 +1,19 @@
+function [Cdk2inc,Cdk2low]=categorizeCdk2fate_2(tracesCdk2,daughterstats,minlengthdaughter)
+earlytime=14; %default 14
+numtraces=size(tracesCdk2,1);
+earlyval=ones(numtraces,1)*NaN;
+lateval=ones(numtraces,1)*NaN;
+maxval=ones(numtraces,1)*NaN;
+minval=ones(numtraces,1)*NaN;
+for i=1:numtraces
+    earlyval(i)=tracesCdk2(i,daughterstats(i,1)+earlytime); 
+    lateval(i)=tracesCdk2(i,daughterstats(i,1)+minlengthdaughter-1);
+    maxval(i)=max(tracesCdk2(i,daughterstats(i,1)+earlytime:daughterstats(i,2))); %max from minlength-end
+    minval(i)=min(tracesCdk2(i,daughterstats(i,1)+earlytime:daughterstats(i,2)));
+end
+%figure,hist(earlyval,0.3:0.02:1.5);
+earlycutoff=0.6; %default 0.55
+latecutoff=earlycutoff+0.01*(minlengthdaughter-earlytime);
+Cdk2inc=earlyval>earlycutoff & lateval>latecutoff & minval>earlycutoff;
+Cdk2low=earlyval<earlycutoff & maxval<earlycutoff;
+end

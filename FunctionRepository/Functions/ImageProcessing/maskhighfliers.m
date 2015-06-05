@@ -1,0 +1,9 @@
+function mask=callthresh(rawimage,nuc_mask,iqrmult)
+%rawimage=single(imread(['H:\Images\2013-11-26_CycDp21SerumRelease\Experiment_20131216\Raw\2_1_1_DAPI_stain.tif']));
+%blurimg=imfilter(rawimage,fspecial('disk',10),'symmetric');
+blurimg=rawimage;
+blurimgnuc=blurimg(nuc_mask>0);
+tiqr=prctile(blurimgnuc(:),75)-prctile(blurimgnuc(:),25);
+tmean=mean(blurimgnuc(:));
+highthresh=tmean+iqrmult*tiqr;
+mask=blurimg>highthresh;
